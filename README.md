@@ -4,19 +4,19 @@
 ----------------------------------------------------------------------------------------
 ### COULEUR :
 
-WHITE --> `#ffffff`
-BLUE THALES --> `#00a3c9`
-DARK-BLUE --> `#242a75`
-BLACK --> `#36393F`
-GREY --> `#9494b4`
-RED --> `#FF0000`
+- WHITE --> `#ffffff`
+- BLUE THALES --> `#00a3c9`
+- DARK-BLUE --> `#242a75`
+- BLACK --> `#36393F`
+- GREY --> `#9494b4`
+- RED --> `#FF0000`
 
 
 ### FONT FAMILY :
 
-ROBOTO, sans-serif
-OU
-POPPINS, sans-serif
+- ROBOTO, sans-serif
+- OU
+- POPPINS, sans-serif
 
 ### LIBRAIRIE :
 
