@@ -3,8 +3,12 @@
     padding: 0;
 }
 :root{
-    --white-color: #ffffff:
-    --blue-thales-color:#00a3c9:
+    --white-color: #ffffff;
+    --blue-thales-color:#00a3c9;
+    --dark-blue-color:#242a75 ;
+    --black-color:#36393F;
+    --grey-color: #9494b4;
+    --red-color: #FF0000;
 }
 html{
     scroll-behavior: smooth;
@@ -13,7 +17,7 @@ html{
 nav{
     max-width: 100%;
     width: 100%;
-    background-color: --blue- ; 
+    background-color: var(--blue-thales-color) ; 
 }
 nav > ul > li{
     list-style-type: none;
@@ -31,7 +35,7 @@ nav > ul > li{
     justify-content: center;
     align-items: center;
     height: 86vh;
-    background-color: red;
+    background-color: var(--red-color);
 }
 form{
     max-width: 100%;
@@ -53,6 +57,7 @@ form{
     width: 350px;
     height: 5vh;
     border-radius: 15px;
+    font-size: 18px;
 }
 #cont-date{
     text-align: center;
@@ -62,5 +67,9 @@ form{
     width: 160px;
     height: 5vh;
     border-radius: 15px;
+}
+input::placeholder{
+    color: var(--grey-color);
+    opacity: 0.85;
 }
     
