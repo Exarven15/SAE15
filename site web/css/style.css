@@ -3,7 +3,8 @@
     padding: 0;
 }
 :root{
-
+    --white-color: #ffffff:
+    --blue-thales-color:#00a3c9:
 }
 html{
     scroll-behavior: smooth;
@@ -12,7 +13,7 @@ html{
 nav{
     max-width: 100%;
     width: 100%;
-    background-color: #00a3c9 ; 
+    background-color: --blue- ; 
 }
 nav > ul > li{
     list-style-type: none;
