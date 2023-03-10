@@ -13,3 +13,47 @@ var = struct.unpack('>i', read_binary(24, 28))
 print(var)
 
 print(convert_deci(read_binary(24, 28)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+print("j'aime les bites comme alban")
