@@ -13,7 +13,7 @@ class header:  #creation de la class
 #class permettant de stocker les valeurs du corps de la trame 
 
 class body: #creation de la class
-    def __init__(self, ms, md, f1, f2, f3, f4, f5, f6, ips, ipd): #pas terminé car pas sur de necessaire 
+    def __init__(self, ms, md, f1, f2, f3, f4, f5, f6, ips, ipd, f9, f10, f11): #pas terminé car pas sur de necessaire  , f14, f16, f17, f18
         self.ms = ms
         self.md = md
         self.f1 = f1
@@ -24,4 +24,13 @@ class body: #creation de la class
         self.f6 = f6
         self.ips = ips
         self.ipd = ipd
+        self.f9 = f9
+        self.f10 = f10
+        self.f11 = f11
+        '''self.f14 = f14
+        self.f16 = f16
+        self.f17 = f17
+        self.f18 = f18'''
     
+    def affiche(self): #fonction permettant d'afficher la class
+        print(f"MAC source {self.ms}, MAC dest {self.md}, f1 {self.f1}, f2 {self.f2}, ip source {self.ips}, ip dest {self.ipd}")

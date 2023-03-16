@@ -47,17 +47,24 @@ def adr_MAC(nb): #prend en entré une valeur de 6 octets de convert deci et
 #fonction qui permet d'utiliser adr_MAC
 
 def read_MAC(octd, octf):
-    return(adr_MAC(convert_deci(read_binary(octd, octf))))
+    return(adr_MAC(read_convert(octd, octf)))
 
 #fonction permettant de convertir une valeur decimal en adr IP
 
-def adr_ip(nb):  #programe non fonctionel pas encore terminé 
-    nb = str(nb)
+def adr_ip(octd, octf): #prend en entrée la valeur en octet début - 1 et la valeur en octet de fin
     list_ip = []
-    for i in range (1,5):
-        ip = nb[i : i+1]
-        ip = convert_deci(ip)
-        list_ip.append(str(ip))
-    nb = ".".join(list_ip)
-    return(nb)
+    for i in range (4):# fait une boucle qui marche 4 fois 
+        oct = str(read_convert(octd, octd+1)) #converti chaque morceau de l'addresse ip et la converti en char
+        octd = octd + 1
+        list_ip.append(oct) #met tous dans une liste 
+    ip = ".".join(list_ip) #join bout a bout tous les élements de la liste par un point 
+    return(ip) #renvoi l'adr ip
 
+def read_bytes(octd, octf, bitd, bitf):
+    nb = read_convert(octd, octf)
+    nb_bin = str(bin(nb))[2:]
+    bit = nb_bin[bitd, bitf]
+    return bit
+
+
+print(read_bytes(20, 24, 12, 20))
