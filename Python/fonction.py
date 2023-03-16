@@ -22,7 +22,7 @@ def read_convert(octd, octf):
 #fonction qui pemet de convertir frame date en utilisant le codage timestamp
 
 def date(nb): #prend en entré une valeur de read_binary 
-    nb = struct.unpack('>d', nb)[0] #utilise la fonction unpack de struct pour convertir le 
+    nb = struct.unpack('>d', nb)[0] #utilise la fonction unpack de struct pour convertir la valeur de 
     date = datetime.datetime.fromtimestamp(nb)  #utilise la fonction 
     date_format = date.strftime('%d/%m/%Y %H:%M:%S')
     return(date_format) #renvoie la date au format jj/mm/aaaa ss/mm/hh
@@ -60,11 +60,15 @@ def adr_ip(octd, octf): #prend en entrée la valeur en octet début - 1 et la va
     ip = ".".join(list_ip) #join bout a bout tous les élements de la liste par un point 
     return(ip) #renvoi l'adr ip
 
-def read_bytes(octd, octf, bitd, bitf):
-    nb = read_convert(octd, octf)
-    nb_bin = str(bin(nb))[2:]
-    bit = nb_bin[bitd, bitf]
-    return bit
+#fonction permettant de lire les octets bits par bits 
 
+def read_bytes(octd, octf, bitd, bitf): #prend en entre l'octet de depart -1 et l'octet de fin et le bits de depart -1 et le bits de fin
+    n = octf - octd #calcule ne nombre d'octet demandé
+    nb = read_convert(octd, octf) #cherche la valeur en decimal des octets 
+    nb_bin = str(bin(nb))[2:] #converti l'octet en binaire et le met enleve le 0b devant
+    nb_bin = nb_bin.zfill(n*8) #remplis le nombre de bits necessaire par des 0 devants car enlevés au moment des converisons
+    bit = nb_bin[bitd : bitf] # prends dans la chaine de charactère les octets demandés 
+    nb = int(bit, 2) #converti le tout en decimal 
+    return(nb) #renvoi la valeur en decimal
 
-print(read_bytes(20, 24, 12, 20))
+#lisez one piece 
