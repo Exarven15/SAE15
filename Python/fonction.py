@@ -1,12 +1,14 @@
 import datetime
+import pytz
 import struct
+
+with open("ethernet.result_data_", "rb") as fic:    
+    binary = fic.read() 
 
 #fonction permetant de chercher la valeur de la variable dans le fichier
 
-def read_binary(octd, octf):  #prend en entreé la valeur en octet de but - 1 et la valeur en octet de fin             
-    with open("ethernet.result_data_", "rb") as fic:    
-        binary = fic.read()
-        return (binary[octd: octf]) #renvoie un chiffre encodé 
+def read_binary(octd, octf):  #prend en entreé la valeur en octet de but - 1 et la valeur en octet de fin   
+    return (binary[octd: octf]) #renvoie un chiffre encodé 
 
 #fonction permettant de décoder la valeur renvoyé donné par read_binary
 
@@ -21,11 +23,19 @@ def read_convert(octd, octf):
 
 #fonction qui pemet de convertir frame date en utilisant le codage timestamp
 
-def date(nb): #prend en entré une valeur de read_binary 
-    nb = struct.unpack('>d', nb)[0] #utilise la fonction unpack de struct pour convertir la valeur de 
+def date(nb):  
+    nb = struct.unpack('>d', nb)[0]  
     date = datetime.datetime.fromtimestamp(nb)  #utilise la fonction 
     date_format = date.strftime('%d/%m/%Y %H:%M:%S')
-    return(date_format) #renvoie la date au format jj/mm/aaaa ss/mm/hh
+    return(date_format) 
+
+def date(nb): #prend en entré une valeur de read_binary
+    nb = struct.unpack('>d', nb)[0] #utilise la fonction unpack de struct pour convertir la valeur en IEEE 754
+    date_utc = datetime.datetime.utcfromtimestamp(nb) #converti la date 
+    timezone = pytz.timezone('Europe/Paris') #definis l'utc demandé
+    date_utc1 = timezone.localize(date_utc) #ajuste la date a l'utc 
+    date_format = date_utc1.strftime('%d/%m/%Y %H:%M:%S') #choisi la façon d'afficher la date 
+    return date_format #renvoie la date au format jj/mm/aaaa ss/mm/hh
 
 #fonction permetant de d'utiliser date
 
