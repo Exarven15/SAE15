@@ -2,7 +2,7 @@ import datetime
 import pytz
 import struct
 
-with open("ethernet.result_data_", "rb") as fic:    
+with open("ethernet.result_data", "rb") as fic:    
     binary = fic.read() 
 
 #fonction permetant de chercher la valeur de la variable dans le fichier
