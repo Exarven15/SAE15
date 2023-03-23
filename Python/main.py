@@ -1,18 +1,18 @@
 import cl_trame  #import du fichier qui creer les classes 
 from fonction import *     #import du fichier avec toutes les fonctions
-import time
+import json
 
+with open("fonctiont.json", "r") as fic:
+    FT = json.load(fic)
 
 def main():
     cpttrame = 1
     cptoctet = 0
     state = True
-    a = hex(read_convert(cptoctet+40, cptoctet+42))[2:]
-    print(a)
     while state == True:
         dt = read_date(cptoctet+8,cptoctet+16)       
         b3 = read_convert(cptoctet+16,cptoctet+20) 
-        b5 = read_bytes(cptoctet+20, cptoctet+24, 12, 16) 
+        b5 = FT["FT_0"]                                                                           #read_bytes(cptoctet+20, cptoctet+24, 12, 16) 
         fz = read_convert(cptoctet+24, cptoctet+28)
         globals()["T{}".format(cpttrame)] = cl_trame.header(dt, b3, b5, fz)
         globals()["T{}".format(cpttrame)].affiche()
@@ -31,20 +31,20 @@ def main():
             f9 = read_convert(cptoctet+62, cptoctet+64)
             f10 = read_convert(cptoctet+64, cptoctet+66)
             f11 = read_convert(cptoctet+66, cptoctet+68)
-            f14 = read_bytes(cptoctet+70, cptoctet+72, 3, 4)
+            f14 = FT["FT_7"]                                                                      #read_bytes(cptoctet+70, cptoctet+72, 3, 4)
             f16 = read_bytes(cptoctet+70, cptoctet+72, 5, 8)
-            f17 = read_bytes(cptoctet+70, cptoctet+72, 8, 11)
-            f18 = read_bytes(cptoctet+70, cptoctet+72, 11, 16)
+            f17 = FT["FT_5"]                                                                      #read_bytes(cptoctet+70, cptoctet+72, 8, 11)
+            f18 = FT["FT_2"]                                                                      #read_bytes(cptoctet+70, cptoctet+72, 11, 16)
             f20 = read_bytes(cptoctet+72, cptoctet+74, 1, 16)
             f21 = read_convert(cptoctet+74, cptoctet+76)
             f23 = read_bytes(cptoctet+76, cptoctet+77, 4, 5) 
             f25 = read_bytes(cptoctet+76, cptoctet+77, 6, 7)
             f26 = read_bytes(cptoctet+76, cptoctet+77, 7, 8)
             f27 = read_bytes(cptoctet+77, cptoctet+78, 0, 2)
-            f28 = read_bytes(cptoctet+77, cptoctet+78, 2, 8)
-            f29 = read_bytes(cptoctet+78, cptoctet+80, 0, 6)
+            f28 = FT["FT_3"]                                                                      #read_bytes(cptoctet+77, cptoctet+78, 2, 8)
+            f29 = FT["FT_0"]                                                                      #read_bytes(cptoctet+78, cptoctet+80, 0, 6)
             f30 = read_bytes(cptoctet+78, cptoctet+80, 6, 16)
-            f32 = read_convert(cptoctet+81, cptoctet+82)
+            f32 = FT["FT_1"]                                                                      #read_convert(cptoctet+81, cptoctet+82)
             f33 = read_convert(cptoctet+82, cptoctet+84)
             f34 = read_convert(cptoctet+84, cptoctet+86)
             f35 = read_convert(cptoctet+86, cptoctet+88)
