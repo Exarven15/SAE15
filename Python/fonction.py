@@ -1,9 +1,12 @@
 import datetime
 import pytz
 import struct
+import cl_trame
 
-with open("ethernet.result_data", "rb") as fic:    
-    binary = fic.read() 
+def ouverture(fic): #fonction permetant de d'ouvrir le fichier binaire prend en entré le nom du fichier binaire 
+    with open(fic, "rb") as f: #ouvre le fichier 
+        global binary   #rend la varible global 
+        binary = f.read() #met dans la variable le contenu de mon fichier
 
 #fonction permetant de chercher la valeur de la variable dans le fichier
 
@@ -80,5 +83,20 @@ def read_bytes(octd, octf, bitd, bitf): #prend en entre l'octet de depart -1 et 
     bit = nb_bin[bitd : bitf] # prends dans la chaine de charactère les octets demandés 
     nb = int(bit, 2) #converti le tout en decimal 
     return(nb) #renvoi la valeur en decimal
+
+#fonction permettant de lire les données du .rep
+
+def fichier(rep): #prend en entré le nom du fichier
+    with open(rep, "rb") as fic:    #ouvre le fichier en binaire
+        lines = fic.readlines() #lit chaque ligne 
+        obsw1 = lines[7].decode().rstrip().split(": ")[1] #lit chaque ligne qui nous interesse 
+        obsw2 = lines[8].decode().rstrip().split(": ")[1]
+        obsw = obsw1 + " " +obsw2 #concataine les 2 valeurs de obsw
+        bds = lines[9].decode().rstrip().split(": ")[1]
+        tv = lines[10].decode().rstrip().split(": ")[1]
+        dt = lines[14].decode().rstrip().replace('"', '').split(": ")[1] #enleve les guillemets pour gérer les pb en csv
+        nom = lines[27].decode().rstrip().split(": ")[1]
+    test = cl_trame.test(obsw, bds, tv, dt, nom)   #création de la variable pour stocker la class
+    test.affiche() #utilisation de la fonction permettant de l'envoyer 
 
 #lisez one piece 

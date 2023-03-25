@@ -5,7 +5,9 @@ import json
 with open("fonctiont.json", "r") as fic:
     FT = json.load(fic)
 
-def main():
+def main(bin, rep):
+    ouverture(bin)
+    fichier(rep)
     cpttrame = 1
     cptoctet = 0
     state = True
@@ -71,10 +73,9 @@ def main():
             cptoctet = cptoctet + fz + 28
             cpttrame = cpttrame +1
 
-
         if not read_convert(cptoctet, cptoctet+8):
             state = False
         
-main()
+main("ethernet.result_data", "Vt_DEMO_power_on.rep")
 
 # t'es super beau basile t'as repris bleach ?
