@@ -1,4 +1,13 @@
 import csv
+import mysql.connector
+
+connection_params = {
+    'host': "localhost",
+    'user': "root",
+    'password': "Rionoir2111*",
+    'database': "base",
+    'auth_plugin': 'mysql_native_password'
+}
 
 #class permettant de stocker les infos du .rep 
 
@@ -11,29 +20,27 @@ class test:
         self.nom = nom
 
     def affiche(self): #fonction permettant d'afficher les valeurs 
+        request = """insert into fichier 
+        (obsw, bds, tv, dte, nomFic)
+        values (%s,%s,%s,%s,%s)"""
+        params =(self.obsw, self.bds, self.tv, self.dte, self.nom)
+        with mysql.connector.connect(**connection_params) as db :
+            with db.cursor() as c:
+                c.execute(request, params)
+                db.commit()
+
         with open("trame.csv", "a") as fic:
             ecri = csv.writer(fic, delimiter = ";")
             ecri.writerow([self.obsw, self.bds, self.tv, self.dte, self.nom])
 
-#class permettant de stocker les valeurs de l'entête de la trame 
+#class permettant de stocker les valeurs du corps de la trame 
 
-class header:  #creation de la class 
-    def __init__(self, date, b3, b5, size): #chaque valeur représente une valeur de l'entête 
+class body800: #creation de la class
+    def __init__(self, date, b3, b5, size, tp, ms, md, f1, f2, f3, f4, f5, f6, ips, ipd, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f27, f28, f29, f30, f32, f33, f34, f35):
         self.date = date
         self.b3 = b3
         self.b5 = b5
         self.size = size
-    
-    def affiche(self): #fonction permettant d'afficher la class
-        
-        with open("trame.csv", "a") as fic:
-            ecri = csv.writer( fic, delimiter = ";")
-            ecri.writerow([self.date, self.b3, self.b5, self.size])
-
-#class permettant de stocker les valeurs du corps de la trame 
-
-class body800: #creation de la class
-    def __init__(self, tp, ms, md, f1, f2, f3, f4, f5, f6, ips, ipd, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f27, f28, f29, f30, f32, f33, f34, f35):
         self.tp = tp
         self.ms = ms
         self.md = md
@@ -67,13 +74,27 @@ class body800: #creation de la class
         self.f35 = f35
 
     def affiche(self): #fonction permettant d'afficher la class
-       
+        request = """insert into trames 
+        (date, b3, b5, size, tp, ms, md, f1, f2, f3, f4, f5, f6, ips, ipd, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f27, f28, f29, f30, f32, f33, f34, f35)
+        values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+        params =(self.date, self.b3, self.b5, self.size, self.tp, self.ms, self.md, self.f1, self.f2, self.f3, self.f4, self.f5, self.f6, self.ips, self.ipd, self.f9, self.f10, self.f11, self.f14, self.f16, self.f17, self.f18,  self.f20, self.f21, self.f23, self.f25, self.f26, self.f27, self.f28, self.f29, self.f30, self.f32, self.f33, self.f34, self.f35)
+        with mysql.connector.connect(**connection_params) as db :
+            with db.cursor() as c:
+                c.execute(request, params)
+                db.commit()
+
+
         with open("trame.csv", "a") as fic:
             ecri = csv.writer( fic, delimiter = ";")
-            ecri.writerow([f"type:{self.tp}",f"MAC SOURCE:{self.ms}",f"MAC DEST:{self.md}", f"f1: {self.f1}",f"f2 {self.f2}",f"f3 {self.f3}",f"f4 {self.f4}",f"f5 {self.f5}",f"f6 {self.f6}",f"ip source {self.ips}",f"ip dest {self.ipd}",f"f14 {self.f14}",f"f16 {self.f16}",f"f17 {self.f17}",  f"f18 {self.f18}",  f"f20 {self.f20}",  f"f21 {self.f21}", f"f23 {self.f23}", f"25 {self.f25}", f"f26 {self.f26}", f"f27 {self.f27}", f"f28 {self.f28}", f"f29 {self.f29}", f"f30 {self.f30}", f"f32 {self.f32}", f"f33 {self.f33}", f"f34 {self.f34}", f"f35 {self.f35}"])
+            ecri.writerow([f"{self.date}, {self.b3}, {self.b5}, {self.size} type:{self.tp}",f"MAC SOURCE:{self.ms}",f"MAC DEST:{self.md}", f"f1: {self.f1}",f"f2 {self.f2}",f"f3 {self.f3}",f"f4 {self.f4}",f"f5 {self.f5}",f"f6 {self.f6}",f"ip source {self.ips}",f"ip dest {self.ipd}",f"f14 {self.f14}",f"f16 {self.f16}",f"f17 {self.f17}",  f"f18 {self.f18}",  f"f20 {self.f20}",  f"f21 {self.f21}", f"f23 {self.f23}", f"25 {self.f25}", f"f26 {self.f26}", f"f27 {self.f27}", f"f28 {self.f28}", f"f29 {self.f29}", f"f30 {self.f30}", f"f32 {self.f32}", f"f33 {self.f33}", f"f34 {self.f34}", f"f35 {self.f35}"])
+
 
 class body806: #creation de la class
-    def __init__(self, tp, ms, md, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg):
+    def __init__(self, date, b3, b5, size, tp, ms, md, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg):
+        self.date = date
+        self.b3 = b3
+        self.b5 = b5
+        self.size = size
         self.tp = tp
         self.ms = ms
         self.md = md
@@ -90,9 +111,19 @@ class body806: #creation de la class
 
 
     def affiche(self): #fonction permettant d'afficher la class
+        request = """insert into trames 
+        (date, b3, b5, size, tp, ms, md, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg)
+        values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+        params =(self.date, self.b3, self.b5, self.size, self.tp, self.ms, self.md, self.f1, self.f2, self.f3, self.f4, self.f5, self.f6, self.msd, self.ipsd, self.mtg, self.iptg)
+        with mysql.connector.connect(**connection_params) as db :
+            with db.cursor() as c:
+                c.execute(request, params)
+                db.commit()
+
+
         with open("trame.csv", "a") as fic:
             ecri = csv.writer( fic, delimiter = ";")
-            ecri.writerow([f"type:{self.tp}",f"MAC SOURCE:{self.ms}",f"MAC DEST:{self.md}", f"f1: {self.f1}",f"f2 {self.f2}",f"f3 {self.f3}",f"f4 {self.f4}",f"f5 {self.f5}",f"f6 {self.f6}",f"mac sender {self.msd}",f"ip sender {self.ipsd}",f"mac target {self.mtg}",f"ip target {self.iptg}"])
+            ecri.writerow([f"{self.date}, {self.b3}, {self.b5}, {self.size} type:{self.tp}",f"MAC SOURCE:{self.ms}",f"MAC DEST:{self.md}", f"f1: {self.f1}",f"f2 {self.f2}",f"f3 {self.f3}",f"f4 {self.f4}",f"f5 {self.f5}",f"f6 {self.f6}",f"mac sender {self.msd}",f"ip sender {self.ipsd}",f"mac target {self.mtg}",f"ip target {self.iptg}"])
             
             
             
