@@ -109,7 +109,6 @@ class body806: #creation de la class
         self.mtg = mtg
         self.iptg = iptg
 
-
     def affiche(self): #fonction permettant d'afficher la class
         request = """insert into trames 
         (date, b3, b5, size, tp, ms, md, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg)
@@ -119,8 +118,6 @@ class body806: #creation de la class
             with db.cursor() as c:
                 c.execute(request, params)
                 db.commit()
-
-
         with open("trame.csv", "a") as fic:
             ecri = csv.writer( fic, delimiter = ";")
             ecri.writerow([f"{self.date}, {self.b3}, {self.b5}, {self.size} type:{self.tp}",f"MAC SOURCE:{self.ms}",f"MAC DEST:{self.md}", f"f1: {self.f1}",f"f2 {self.f2}",f"f3 {self.f3}",f"f4 {self.f4}",f"f5 {self.f5}",f"f6 {self.f6}",f"mac sender {self.msd}",f"ip sender {self.ipsd}",f"mac target {self.mtg}",f"ip target {self.iptg}"])

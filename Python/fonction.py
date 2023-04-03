@@ -2,6 +2,29 @@ import datetime
 import pytz
 import struct
 import cl_trame
+import json
+
+
+with open("FT/FT_7.json", "r") as fic:
+    FT_7 = json.load(fic)
+
+with open("FT/FT_5.json", "r") as fic:
+    FT_5 = json.load(fic)
+
+with open("FT/FT_4.json", "r") as fic:
+    FT_4 = json.load(fic)
+
+with open("FT/FT_2.json", "r") as fic:
+    FT_2 = json.load(fic)
+
+with open("FT/FT_3.json", "r") as fic:
+    FT_3 = json.load(fic)
+
+with open("FT/FT_1.json", "r") as fic:
+    FT_1 = json.load(fic)
+
+with open("FT/FT_0.json", "r") as fic:
+    FT_0 = json.load(fic)            
 
 def ouverture(fic): #fonction permetant de d'ouvrir le fichier binaire prend en entré le nom du fichier binaire 
     with open(fic, "rb") as f: #ouvre le fichier 
@@ -25,12 +48,6 @@ def read_convert(octd, octf):
     return(convert_deci(read_binary(octd, octf)))
 
 #fonction qui pemet de convertir frame date en utilisant le codage timestamp
-
-def date(nb):  
-    nb = struct.unpack('>d', nb)[0]  
-    date = datetime.datetime.fromtimestamp(nb)  #utilise la fonction 
-    date_format = date.strftime('%d/%m/%Y %H:%M:%S')
-    return(date_format) 
 
 def date(nb): #prend en entré une valeur de read_binary
     nb = struct.unpack('>d', nb)[0] #utilise la fonction unpack de struct pour convertir la valeur en IEEE 754
@@ -98,5 +115,74 @@ def fichier(rep): #prend en entré le nom du fichier
         nom = lines[27].decode().rstrip().split(": ")[1]
     test = cl_trame.test(obsw, bds, tv, dt, nom)   #création de la variable pour stocker la class
     test.affiche() #utilisation de la fonction permettant de l'envoyer 
+
+def fct_transfert(val, FT):
+
+    if FT == "FT_0":
+        for brut in FT_0:
+            if val == brut:
+                label = FT_0[val]
+                return(label)
+            else:
+                return(val)
+
+    if FT == "FT_1":
+        for brut in FT_1:
+            if val == brut:
+                label = FT_1[brut]
+                return(label)
+            else:
+                return(val)
+
+    if FT == "FT_2":
+        for brut in FT_2:
+            if val == brut:
+                label = FT_2[brut]
+                return(label)
+            else:
+                return(val)
+
+    if FT == "FT_3":
+        for brut in FT_3:
+            if val == brut:
+                label = FT_3[brut]
+                return(label)
+            else:
+                return(val)
+
+    if FT == "FT_4":
+        for brut in FT_4:
+            if val == brut:
+                label = FT_4[brut]
+                return(label)
+            else:
+                return(val)
+
+    if FT == "FT_5":
+        for brut in FT_5:
+            if val == brut:
+                label = FT_5[brut]
+                return(label)
+            else:
+                return(val)
+            
+    if FT == "FT_7":
+        for brut in FT_7:
+            if val == brut:
+                label = FT_7[brut]
+                return(label)
+            else:
+                return(val)
+
+def useft(octd, octf,  FT, bd=0, bf=0):
+    if  FT != "FT_5" and FT != "FT_1":
+        value = "0x"+str(read_bytes(octd, octf, bd, bf)).zfill(2)
+        return(fct_transfert(value, FT))
+    elif FT == "FT_5":
+        value = str(int(read_bytes(octd, octf, bd, bf)))
+        return(fct_transfert(value, FT))
+    else:
+        value = str(read_convert(octd, octf))
+        return(fct_transfert(value, FT))
 
 #lisez one piece 
