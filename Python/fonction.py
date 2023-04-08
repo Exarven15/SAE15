@@ -98,7 +98,9 @@ def read_bytes(octd, octf, bitd, bitf): #prend en entre l'octet de depart -1 et 
     nb_bin = str(bin(nb))[2:] #converti l'octet en binaire et le met enleve le 0b devant
     nb_bin = nb_bin.zfill(n*8) #remplis le nombre de bits necessaire par des 0 devants car enlevés au moment des converisons
     bit = nb_bin[bitd : bitf] # prends dans la chaine de charactère les octets demandés 
+#    print(bit)
     nb = int(bit, 2) #converti le tout en decimal 
+#    print(nb)
     return(nb) #renvoi la valeur en decimal
 
 #fonction permettant de lire les données du .rep
@@ -123,56 +125,50 @@ def fct_transfert(val, FT):
             if val == brut:
                 label = FT_0[val]
                 return(label)
-            else:
-                return(val)
+
+        return(int(val, base=16))
 
     if FT == "FT_1":
         for brut in FT_1:
             if val == brut:
                 label = FT_1[brut]
                 return(label)
-            else:
-                return(val)
+        return(int(val, base=16))
 
     if FT == "FT_2":
         for brut in FT_2:
             if val == brut:
                 label = FT_2[brut]
                 return(label)
-            else:
-                return(val)
+        return(int(val, base=16))
 
     if FT == "FT_3":
         for brut in FT_3:
             if val == brut:
                 label = FT_3[brut]
                 return(label)
-            else:
-                return(val)
+        return(int(val, base=16))
 
     if FT == "FT_4":
         for brut in FT_4:
             if val == brut:
                 label = FT_4[brut]
                 return(label)
-            else:
-                return(val)
+        return(int(val, base=16))
 
     if FT == "FT_5":
         for brut in FT_5:
             if val == brut:
                 label = FT_5[brut]
                 return(label)
-            else:
-                return(val)
+        return(int(val, base=16))
             
     if FT == "FT_7":
         for brut in FT_7:
             if val == brut:
                 label = FT_7[brut]
                 return(label)
-            else:
-                return(val)
+        return(int(val, base=16))
 
 def useft(octd, octf,  FT, bd=0, bf=0):
     if  FT != "FT_5" and FT != "FT_1":
@@ -184,5 +180,13 @@ def useft(octd, octf,  FT, bd=0, bf=0):
     else:
         value = str(read_convert(octd, octf))
         return(fct_transfert(value, FT))
+
+"""ouverture("../test/test2/ethernet.result_data")
+print(useft(20, 24, "FT_0", 13, 16))
+
+
+
+read_bytes(20, 24, 0, 20)
+print(read_convert(20, 24))"""
 
 #lisez one piece 
