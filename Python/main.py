@@ -1,5 +1,11 @@
 import cl_trame  #import du fichier qui creer les classes 
 from fonction import *     #import du fichier avec toutes les fonctions
+import json
+
+with open("/var/www/Projet/Python/compteur.json", "r") as fic:
+    global cpter
+    cpter = json.load(fic)
+
 
 def main(bin, rep):
     ouverture(bin)
@@ -46,7 +52,7 @@ def main(bin, rep):
             f35 = read_convert(coct+86, coct+88)
             #if coct == 0:
             #    print(f33+f34, f35/2**16)
-            globals()["B{}".format(cpttrame)] = cl_trame.body800(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, f7, ips, ipd, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, f33)
+            globals()["B{}".format(cpttrame)] = cl_trame.body800(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, f7, ips, ipd, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, f33, cpter)
             globals()["B{}".format(cpttrame)].affiche()
             coct = coct + fz + 28
             cpttrame = cpttrame +1
@@ -63,14 +69,16 @@ def main(bin, rep):
             ipsd = adr_ip(coct+56, coct+60)
             mtg = read_MAC(coct+60, coct+66)
             iptg = adr_ip(coct+66, coct+70)
-            globals()["B{}".format(cpttrame)] = cl_trame.body806(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg)
+            globals()["B{}".format(cpttrame)] = cl_trame.body806(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg, cpter)
             globals()["B{}".format(cpttrame)].affiche()
             coct = coct + fz + 28
             cpttrame = cpttrame +1
 
         if not read_convert(coct, coct+8):
             state = False
-        
-main("../test/test2/ethernet.result_data", "../test/test2/Vt_DEMO_mem_observability.rep")
 
-
+cpter = cpter + 1 
+with open("/var/www/Projet/Python/compteur.json", "w") as fic:
+    json.dump(cpter, fic)
+       
+main("/var/www/Projet/Python/ethernet.result_data_", "/var/www/Projet/Python/Vt_DEMO_power_on.rep")
