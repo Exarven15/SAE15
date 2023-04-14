@@ -1,6 +1,6 @@
 import cl_trame  #import du fichier qui creer les classes 
 from fonction import *     #import du fichier avec toutes les fonctions
-import json      
+import json
 
 with open("compteur.json", "wr") as fic:
     global cpter
@@ -53,9 +53,6 @@ def main(bine, rep):
             f33 = read_convert(coct+82, coct+84)
             f34 = read_convert(coct+84, coct+86)
             f35 = read_convert(coct+86, coct+88)
-            #if coct == 0:
-                #print(bin(f33), bin(f34))
-                #print(int(f33, base = 10) ,int(f34, base=10), f35/2**16)
             globals()["B{}".format(cpttrame)] = cl_trame.body800(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, f7, ips, ipd, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, f33, cpter)
             globals()["B{}".format(cpttrame)].affiche()
             coct = coct + fz + 28
@@ -82,9 +79,7 @@ def main(bine, rep):
             state = False
 
 cpter = cpter + 1 
-with open("compteur.json", "w") as fic:
+with open("/var/www/Projet/Python/compteur.json", "w") as fic:
     json.dump(cpter, fic)
-        
-main("../test/test2/ethernet.result_data", "../test/test2/Vt_DEMO_mem_observability.rep")
-
-
+       
+main("/var/www/Projet/Python/ethernet.result_data_", "/var/www/Projet/Python/Vt_DEMO_power_on.rep")
