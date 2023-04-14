@@ -105,7 +105,7 @@ def read_bytes(octd, octf, bitd, bitf): #prend en entre l'octet de depart -1 et 
 
 #fonction permettant de lire les données du .rep
 
-def fichier(rep): #prend en entré le nom du fichier
+def fichier(rep, cpter): #prend en entré le nom du fichier
     with open(rep, "rb") as fic:    #ouvre le fichier en binaire
         lines = fic.readlines() #lit chaque ligne 
         obsw1 = lines[7].decode().rstrip().split(": ")[1] #lit chaque ligne qui nous interesse 
@@ -115,7 +115,7 @@ def fichier(rep): #prend en entré le nom du fichier
         tv = lines[10].decode().rstrip().split(": ")[1]
         dt = lines[14].decode().rstrip().replace('"', '').split(": ")[1] #enleve les guillemets pour gérer les pb en csv
         nom = lines[27].decode().rstrip().split(": ")[1]
-    test = cl_trame.test(obsw, bds, tv, dt, nom)   #création de la variable pour stocker la class
+    test = cl_trame.test(cpter, obsw, bds, tv, dt, nom)   #création de la variable pour stocker la class
     test.affiche() #utilisation de la fonction permettant de l'envoyer 
 
 def fct_transfert(val, FT):
@@ -181,12 +181,5 @@ def useft(octd, octf,  FT, bd=0, bf=0):
         value = str(read_convert(octd, octf))
         return(fct_transfert(value, FT))
 
-"""ouverture("../test/test2/ethernet.result_data")
-print(useft(20, 24, "FT_0", 13, 16))
-
-
-
-read_bytes(20, 24, 0, 20)
-print(read_convert(20, 24))"""
 
 #lisez one piece 

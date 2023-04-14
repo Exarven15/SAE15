@@ -1,9 +1,16 @@
 import cl_trame  #import du fichier qui creer les classes 
 from fonction import *     #import du fichier avec toutes les fonctions
+import json      
 
-def main(bin, rep):
-    ouverture(bin)
-    fichier(rep)
+with open("compteur.json", "wr") as fic:
+    global cpter
+    cpter = json.load(fic)
+    cpter =+ cpter
+    json.dump(cpter, fic)
+
+def main(bine, rep):
+    ouverture(bine)
+    fichier(rep, cpter)
     cpttrame = 1
     coct = 0
     state = True
@@ -11,6 +18,8 @@ def main(bin, rep):
         dt = read_date(coct+8,coct+16)       
         b3 = read_convert(coct+16,coct+20)
         b5 = useft(coct+20, coct+24, "FT_0", 13, 16) #bytes
+        if coct == 0:
+            print(read_convert(20, 24))
         fz = read_convert(coct+24, coct+28)
         if hex(read_convert(coct+40, coct+42))[2:] == "800":
             md = read_MAC(coct+28, coct+34)
@@ -45,8 +54,9 @@ def main(bin, rep):
             f34 = read_convert(coct+84, coct+86)
             f35 = read_convert(coct+86, coct+88)
             #if coct == 0:
-            #    print(f33+f34, f35/2**16)
-            globals()["B{}".format(cpttrame)] = cl_trame.body800(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, f7, ips, ipd, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, f33)
+                #print(bin(f33), bin(f34))
+                #print(int(f33, base = 10) ,int(f34, base=10), f35/2**16)
+            globals()["B{}".format(cpttrame)] = cl_trame.body800(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, f7, ips, ipd, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, f33, cpter)
             globals()["B{}".format(cpttrame)].affiche()
             coct = coct + fz + 28
             cpttrame = cpttrame +1
@@ -63,13 +73,17 @@ def main(bin, rep):
             ipsd = adr_ip(coct+56, coct+60)
             mtg = read_MAC(coct+60, coct+66)
             iptg = adr_ip(coct+66, coct+70)
-            globals()["B{}".format(cpttrame)] = cl_trame.body806(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg)
+            globals()["B{}".format(cpttrame)] = cl_trame.body806(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg, cpter)
             globals()["B{}".format(cpttrame)].affiche()
             coct = coct + fz + 28
             cpttrame = cpttrame +1
 
         if not read_convert(coct, coct+8):
             state = False
+
+cpter = cpter + 1 
+with open("compteur.json", "w") as fic:
+    json.dump(cpter, fic)
         
 main("../test/test2/ethernet.result_data", "../test/test2/Vt_DEMO_mem_observability.rep")
 
