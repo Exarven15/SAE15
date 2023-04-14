@@ -5,25 +5,25 @@ import cl_trame
 import json
 
 
-with open("FT/FT_7.json", "r") as fic:
+with open("/var/www/Projet/Python/FT/FT_7.json", "r") as fic:
     FT_7 = json.load(fic)
 
-with open("FT/FT_5.json", "r") as fic:
+with open("/var/www/Projet/Python/FT/FT_5.json", "r") as fic:
     FT_5 = json.load(fic)
 
-with open("FT/FT_4.json", "r") as fic:
+with open("/var/www/Projet/Python/FT/FT_4.json", "r") as fic:
     FT_4 = json.load(fic)
 
-with open("FT/FT_2.json", "r") as fic:
+with open("/var/www/Projet/Python/FT/FT_2.json", "r") as fic:
     FT_2 = json.load(fic)
 
-with open("FT/FT_3.json", "r") as fic:
+with open("/var/www/Projet/Python/FT/FT_3.json", "r") as fic:
     FT_3 = json.load(fic)
 
-with open("FT/FT_1.json", "r") as fic:
+with open("/var/www/Projet/Python/FT/FT_1.json", "r") as fic:
     FT_1 = json.load(fic)
 
-with open("FT/FT_0.json", "r") as fic:
+with open("/var/www/Projet/Python/FT/FT_0.json", "r") as fic:
     FT_0 = json.load(fic)            
 
 def ouverture(fic): #fonction permetant de d'ouvrir le fichier binaire prend en entré le nom du fichier binaire 
@@ -115,7 +115,7 @@ def fichier(rep, cpter): #prend en entré le nom du fichier
         tv = lines[10].decode().rstrip().split(": ")[1]
         dt = lines[14].decode().rstrip().replace('"', '').split(": ")[1] #enleve les guillemets pour gérer les pb en csv
         nom = lines[27].decode().rstrip().split(": ")[1]
-    test = cl_trame.test(cpter, obsw, bds, tv, dt, nom)   #création de la variable pour stocker la class
+    test = cl_trame.test(obsw, bds, tv, dt, nom, cpter)   #création de la variable pour stocker la class
     test.affiche() #utilisation de la fonction permettant de l'envoyer 
 
 def fct_transfert(val, FT):

@@ -2,14 +2,15 @@ import cl_trame  #import du fichier qui creer les classes
 from fonction import *     #import du fichier avec toutes les fonctions
 import json
 
-with open("compteur.json", "wr") as fic:
+with open("/var/www/Projet/Python/compteur.json", "rw") as fic:
     global cpter
     cpter = json.load(fic)
-    cpter =+ cpter
-    json.dump(cpter, fic)
+    cpter = 1 + cpter
+    json.dump(cpter,fic)
 
-def main(bine, rep):
-    ouverture(bine)
+
+def main(bin, rep):
+    ouverture(bin)
     fichier(rep, cpter)
     cpttrame = 1
     coct = 0
@@ -77,9 +78,5 @@ def main(bine, rep):
 
         if not read_convert(coct, coct+8):
             state = False
-
-cpter = cpter + 1 
-with open("/var/www/Projet/Python/compteur.json", "w") as fic:
-    json.dump(cpter, fic)
        
 main("/var/www/Projet/Python/ethernet.result_data_", "/var/www/Projet/Python/Vt_DEMO_power_on.rep")
