@@ -1,4 +1,3 @@
-
 CREATE TABLE
     IF NOT EXISTS 
     fichier (
@@ -55,6 +54,7 @@ CREATE TABLE
         f30 VARCHAR(50),
         f32 VARCHAR(50),
         pkDte VARCHAR(50),
+        ft_6 VARCHAR(50),
         PRIMARY KEY (idTrame),
         FOREIGN KEY (idFichier) REFERENCES fichier(id)
 );

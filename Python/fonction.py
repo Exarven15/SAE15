@@ -9,34 +9,34 @@ def ouverture(fic): #fonction permetant de d'ouvrir le fichier binaire prend en 
     with open(fic, "rb") as f: #ouvre le fichier 
         global binary   #rend la varible global 
         binary = f.read() #met dans la variable le contenu de mon fichier
-    with open("FT/FT_7.json", "r") as fic:
+    with open("./FT/FT_7.json", "r") as fic: 
         global FT_7
         FT_7 = json.load(fic)
-    with open("FT/FT_6.json", "r") as fic:
+    with open("./FT/FT_6.json", "r") as fic:
         global FT_6
         FT_6 = json.load(fic)
-    with open("FT/FT_5.json", "r") as fic:
+    with open("./FT/FT_5.json", "r") as fic:
         global FT_5
         FT_5 = json.load(fic)
-    with open("FT/FT_4.json", "r") as fic:
+    with open("./FT/FT_4.json", "r") as fic:
         global FT_4
         FT_4 = json.load(fic)
-    with open("FT/FT_3.json", "r") as fic:
+    with open("./FT/FT_3.json", "r") as fic:
         global FT_3
         FT_3 = json.load(fic)
-    with open("FT/FT_2.json", "r") as fic:
+    with open("./FT/FT_2.json", "r") as fic:
         global FT_2
         FT_2 = json.load(fic)
-    with open("FT/FT_1.json", "r") as fic:
+    with open("./FT/FT_1.json", "r") as fic:
         global FT_1
         FT_1 = json.load(fic)
-    with open("FT/FT_0.json", "r") as fic:
+    with open("./FT/FT_0.json", "r") as fic:
         global FT_0
         FT_0 = json.load(fic)
-    with open("FT/MAC_ADR.json", "r") as fic:
+    with open("./FT/MAC_ADR.json", "r") as fic:
         global MAC_ADR
         MAC_ADR = json.load(fic)
-    with open("FT/IP_ADR.json", "r") as fic:
+    with open("./FT/IP_ADR.json", "r") as fic:
         global IP_ADR
         IP_ADR = json.load(fic)    
 
@@ -69,16 +69,11 @@ def date(nb): #prend en entré une valeur de read_binary
 #fonction qui pemet de convertir frame date en utilisant le codage timestamp 2000
 
 def date_2000(nb):
-    # Ajoute le nombre de secondes à partir du 01/01/2000 à 12h00:00
-    date_2000 = datetime.datetime(2000, 1, 1, 12, 0, 0)
+    date_2000 = datetime.datetime(2000, 1, 1, 12, 0, 0)# Ajoute le nombre de secondes à partir du 01/01/2000 à 12h00:00
     date = date_2000 + datetime.timedelta(seconds=nb)
-    
-    # Convertit la date en UTC
-    timezone = pytz.timezone('Europe/Paris')
-    date_utc = timezone.localize(date).astimezone(pytz.utc)
-    
-    # Formate la date
-    date_format = date_utc.strftime('%d/%m/%Y %H:%M:%S.%f')
+    timezone = pytz.timezone('Europe/Paris') #definit l'UTC
+    date_utc = timezone.localize(date).astimezone(pytz.utc) # Convertit la date en UTC
+    date_format = date_utc.strftime('%d/%m/%Y %H:%M:%S.%f') # Formate la date
     return date_format
 
 #fonction permetant de d'utiliser date
@@ -122,15 +117,13 @@ def read_bytes(octd, octf, bitd, bitf): #prend en entre l'octet de depart -1 et 
     nb_bin = str(bin(nb))[2:] #converti l'octet en binaire et le met enleve le 0b devant
     nb_bin = nb_bin.zfill(n*8) #remplis le nombre de bits necessaire par des 0 devants car enlevés au moment des converisons
     bit = nb_bin[bitd : bitf] # prends dans la chaine de charactère les octets demandés 
-#    print(bit)
     nb = int(bit, 2) #converti le tout en decimal 
-#    print(nb)
     return(nb) #renvoi la valeur en decimal
 
 #fonction permettant de lire les données du .rep
 
-def fichier(rep, cpter): #prend en entré le nom du fichier
-    with open(rep, "rb") as fic:    #ouvre le fichier en binaire
+def fichier(rep, cpter, db): #prend en entré le nom du fichier
+    with open(rep, "rb") as fic: #ouvre le fichier en binaire
         lines = fic.readlines() #lit chaque ligne 
         obsw1 = lines[7].decode().rstrip().split(": ")[1] #lit chaque ligne qui nous interesse 
         obsw2 = lines[8].decode().rstrip().split(": ")[1]
@@ -139,18 +132,20 @@ def fichier(rep, cpter): #prend en entré le nom du fichier
         tv = lines[10].decode().rstrip().split(": ")[1]
         dt = lines[14].decode().rstrip().replace('"', '').split(": ")[1] #enleve les guillemets pour gérer les pb en csv
         nom = lines[27].decode().rstrip().split(": ")[1]
-    test = cl_trame.test(cpter, obsw, bds, tv, dt, nom)   #création de la variable pour stocker la class
+    test = cl_trame.test(cpter, obsw, bds, tv, dt, nom, db)   #création de la variable pour stocker la class
     test.affiche() #utilisation de la fonction permettant de l'envoyer 
 
-def fct_transfert(val, FT):
-    if FT == "FT_0":
-        for brut in FT_0:
-            if val == brut:
-                label = FT_0[brut] #[val]
-                return(label)
-        return(int(val, base=16))
+#fonction permettant de verifier si une valeur a un equivalent pour une fonction de transfert
 
-    if FT == "FT_1":
+def fct_transfert(val, FT): #prend en entrée la valeure et la fonction de transfert associé a la valeure
+    if FT == "FT_0":    #verifie si la ftc est la bonne 
+        for brut in FT_0:   #prend toutes les valeurs de ftc possible 
+            if val == brut: #compare les a celle voule
+                label = FT_0[brut] #si ca correspond on revoie l'équivalent en fonction de transfert 
+                return(label)
+        return(int(val, base=16)) #sinon on renvoie la valeur initiale 
+
+    if FT == "FT_1": #meme principe 
         for brut in FT_1:
             if val == brut:
                 label = FT_1[brut]
@@ -231,17 +226,14 @@ def FT6(f14, f18, f28, f29, f30):
     return string
 
 def made_cpter():
-    with open("compteur.json", "r") as fic1:
+    with open("./compteur.json", "r") as fic1:
         cpter = json.load(fic1)
     cpter = cpter + 1
-    with open("compteur.json", "w") as fic2:
+    with open("./compteur.json", "w") as fic2:
         json.dump(cpter, fic2)
     return cpter
 
 if __name__ == '__main__':
-
-    ouverture("../test/test2/ethernet.result_data")
-    #print(made_cpter())
-    print(ft_adr("MAC", read_MAC(28, 34)))
-
-#lisez one piece 
+    print("Bravo vous avez trouvé les cramptés")
+    print("lisez les one piece")
+    print("makima best waifu")

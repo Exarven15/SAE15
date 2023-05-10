@@ -11,8 +11,9 @@ connection_params = {
 
 #class permettant de stocker les infos du .rep 
 
+
 class Database:
-    def init(self, connection_params):
+    def __init__(self, connection_params):
         self.connection_params = connection_params
         self.connection = None
 
@@ -32,20 +33,21 @@ class Database:
             self.connection.commit()
 
 class test:
-    def __init__(self, cpter, obsw, bds, tv, dte, nom): #création de la class 
+    def __init__(self, cpter, obsw, bds, tv, dte, nom, db): #création de la class 
         self.cpter = cpter
         self.obsw = obsw
         self.bds = bds
         self.tv = tv
         self.dte = dte
         self.nom = nom
+        self.db = db
 
     def affiche(self): #fonction permettant d'afficher les valeurs 
         request = """insert into fichier 
         (cpter, obsw, bds, tv, dte, nomFic)
         values (%s,%s,%s,%s,%s,%s)"""
         params =(self.cpter,self.obsw, self.bds, self.tv, self.dte, self.nom)
-        self.db_connector.execute(request, params)
+        self.db.execute(request, params)
 
         with open("trame.csv", "a") as fic:
             ecri = csv.writer(fic, delimiter = ";")
@@ -54,7 +56,7 @@ class test:
 #class permettant de stocker les valeurs du corps de la trame 
 
 class body800: #creation de la class
-    def __init__(self, date, b3, b5, size, md, ms, f1, f2, f3, f4, f5, f6, f7, ips, ipd, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, pktd, ft_6,cpter):
+    def __init__(self, date, b3, b5, size, md, ms, f1, f2, f3, f4, f5, f6, f7, ips, ipd, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, pktd, ft_6, cpter, db):
         self.date = date
         self.b3 = b3
         self.b5 = b5
@@ -89,13 +91,14 @@ class body800: #creation de la class
         self.pktd = pktd
         self.ft_6 = ft_6
         self.cpter = cpter
+        self.db = db
 
     def affiche(self): #fonction permettant d'afficher la class
         request = """insert into trames 
-        (idFichier,dte, b3, b5, size, macDest, macSource, f1, f2, f3, f4, f5, f6, f7,  macSender, ipSender, macTarget, ipTarget, ipSource, ipDest, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, pkDte, ft_6)
+        (idFichier,dteT, b3, b5, size, macDest, macSource, f1, f2, f3, f4, f5, f6, f7,  macSender, ipSender, macTarget, ipTarget, ipSource, ipDest, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, pkDte, ft_6)
         values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
         params =(self.cpter, self.date, self.b3, self.b5, self.size, self.md, self.ms, self.f1, self.f2, self.f3, self.f4, self.f5, self.f6, self.f7, "", "", "", "",self.ips, self.ipd, self.f9, self.f10, self.f11, self.f14, self.f16, self.f17, self.f18,  self.f20, self.f21, self.f23, self.f25, self.f26, self.f28, self.f29, self.f30, self.f32, self.pktd, self.ft_6)
-        self.db_connector.execute(request, params)
+        self.db.execute(request, params)
 
 
         with open("trame.csv", "a") as fic:
@@ -104,7 +107,7 @@ class body800: #creation de la class
 
 
 class body806: #creation de la class
-    def __init__(self, date, b3, b5, size, md, ms, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg,cpter):
+    def __init__(self, date, b3, b5, size, md, ms, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg, cpter, db):
         self.date = date
         self.b3 = b3
         self.b5 = b5
@@ -122,21 +125,15 @@ class body806: #creation de la class
         self.mtg = mtg
         self.iptg = iptg
         self.cpter = cpter
+        self.db = db
 
     def affiche(self): #fonction permettant d'afficher la class
         request = """insert into trames 
-        (idFichier, dte, b3, b5, size, macDest, macSource, f1, f2, f3, f4, f5, f6, f7, macSender, ipSender, macTarget, ipTarget, ipSource, ipDest, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, pkDte)
+        (idFichier, dteT, b3, b5, size, macDest, macSource, f1, f2, f3, f4, f5, f6, f7, macSender, ipSender, macTarget, ipTarget, ipSource, ipDest, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, pkDte)
         values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
         params =(self.cpter,self.date, self.b3, self.b5, self.size, self.ms, self.md, self.f1, self.f2, self.f3, self.f4, self.f5, self.f6, "", self.msd, self.ipsd, self.mtg, self.iptg, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")
-        self.db_connector.execute(request, params)
+        self.db.execute(request, params)
 
         with open("trame.csv", "a") as fic:
             ecri = csv.writer( fic, delimiter = ";")
             ecri.writerow([f"{self.date}, {self.b3}, {self.b5}, {self.size}",f"MAC SOURCE:{self.ms}",f"MAC DEST:{self.md}", f"f1: {self.f1}",f"f2 {self.f2}",f"f3 {self.f3}",f"f4 {self.f4}",f"f5 {self.f5}",f"f6 {self.f6}",f"mac sender {self.msd}",f"ip sender {self.ipsd}",f"mac target {self.mtg}",f"ip target {self.iptg}"])
-            
-            
-            
-
-            
-#print(f"date {self.date}, b3 {self.b3}, b5 {self.b5}, taille {self.size}")
-# print(f"MAC source {self.ms},\n MAC dest {self.md},\n f1 {self.f1},\n f2 {self.f2},\n f3 {self.f3},\n f4 {self.f4},\n f5 {self.f5},\n f6 {self.f6},\n ip source {self.ips},\n ip dest {self.ipd},\n f14 {self.f14},\n f16 {self.f16},\n f17 {self.f17},\n f18 {self.f18},\n f20 {self.f20},\n f21 {self.f21},\nf23 {self.f23},\nf25 {self.f25},\nf26 {self.f26},\nf27 {self.f27},\nf28 {self.f28},\nf29 {self.f29},\nf30 {self.f30},\nf32 {self.f32},\nf33 {self.f33},\nf34 {self.f34},\nf35 {self.f35}")

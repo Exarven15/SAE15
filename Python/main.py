@@ -2,11 +2,11 @@ import cl_trame  #import du fichier qui creer les classes
 from fonction import *     #import du fichier avec toutes les fonctions
 
 def main(bine, rep):
+    db = cl_trame.Database(cl_trame.connection_params)
+    db.connect()
     ouverture(bine)
     cpter = made_cpter()
-    fichier(rep, cpter)
-    #db_connector = DatabaseConnector(connection_params)
-    #db_connector.connect()
+    fichier(rep, cpter, db)
     cpttrame = 1
     coct = 0
     state = True
@@ -51,7 +51,7 @@ def main(bine, rep):
             f35 = read_convert(coct+86, coct+88)
             pkdt = date_2000(f33+f35/2**16)
             ft_6 = fct_transfert(FT6(f14, f18, f28, f29, f30), "FT_6")
-            globals()["B{}".format(cpttrame)] = cl_trame.body800(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, f7, ips, ipd, f9, f10, f11, ft14, f16, f17, ft18, f20, f21, f23, f25, f26, ft28, ft29, f30, f32, pkdt, ft_6,cpter)
+            globals()["B{}".format(cpttrame)] = cl_trame.body800(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, f7, ips, ipd, f9, f10, f11, ft14, f16, f17, ft18, f20, f21, f23, f25, f26, ft28, ft29, f30, f32, pkdt, ft_6, cpter, db)
             globals()["B{}".format(cpttrame)].affiche()
             coct = coct + fz + 28
             cpttrame = cpttrame +1
@@ -68,12 +68,13 @@ def main(bine, rep):
             ipsd = adr_ip(coct+56, coct+60)
             mtg = read_MAC(coct+60, coct+66)
             iptg = adr_ip(coct+66, coct+70)
-            globals()["B{}".format(cpttrame)] = cl_trame.body806(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg, cpter)
+            globals()["B{}".format(cpttrame)] = cl_trame.body806(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg, cpter, db)
             globals()["B{}".format(cpttrame)].affiche()
             coct = coct + fz + 28
             cpttrame = cpttrame +1
 
         if not read_convert(coct, coct+8):
             state = False
+    db.disconnect()
 
-main("../test/test2/ethernet.result_data", "../test/test2/Vt_DEMO_mem_observability.rep")
+main("../test/test1/ethernet.result_data", "../test/test1/Vt_DEMO_power_on.rep")
