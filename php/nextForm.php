@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('base.php');
+include('tools/base.php');
 
 $nomFichier = $_POST['nom-fic'];
 ?>
@@ -16,14 +16,10 @@ $nomFichier = $_POST['nom-fic'];
 </head>
 
 <body>
-    <nav class="nav">
-
-    </nav>
-
     <nav>
         <ul>
             <li id="home"><a href="../index.php">Home</a></li>
-            <li id="favoris"><a href="">Config</a></li>
+            <li id="favoris"><a href="/php/config/config.php">Config</a></li>
         </ul>
     </nav>
     <div id="container">
@@ -70,4 +66,4 @@ $nomFichier = $_POST['nom-fic'];
 </body>
 
 </html>
-<script src="Script/script.js"></script>
+<script src="Js/script.js"></script>

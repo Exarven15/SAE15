@@ -44,7 +44,7 @@ class test:
 
     def affiche(self): #fonction permettant d'afficher les valeurs 
         request = """insert into fichier 
-        (cpter, obsw, bds, tv, dte, nomFic)
+        (id,obsw, bds, tv, dte, nomFic)
         values (%s,%s,%s,%s,%s,%s)"""
         params =(self.cpter,self.obsw, self.bds, self.tv, self.dte, self.nom)
         self.db.execute(request, params)

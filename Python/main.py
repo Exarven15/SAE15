@@ -77,4 +77,4 @@ def main(bine, rep):
             state = False
     db.disconnect()
 
-main("../test/test1/ethernet.result_data", "../test/test1/Vt_DEMO_power_on.rep")
+main("../test/test2/ethernet.result_data", "../test/test2/Vt_DEMO_mem_observability.rep")
