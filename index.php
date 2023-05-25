@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('php/base.php');
+include('php/tools/base.php');
 
 ?>
 <!DOCTYPE html>
@@ -15,14 +15,11 @@ include('php/base.php');
 </head>
 
 <body>
-    <nav class="nav">
-
-    </nav>
 
     <nav>
         <ul>
             <li id="home"><a href="index.php">Home</a></li>
-            <li id="favoris"><a href="">Config</a></li>
+            <li id="favoris"><a href="/php/config/config.php">Config</a></li>
         </ul>
     </nav>
     <div id="container">
@@ -63,4 +60,4 @@ include('php/base.php');
 </body>
 
 </html>
-<script src="Script/script.js"></script>
+<script src="Js/script.js"></script>
