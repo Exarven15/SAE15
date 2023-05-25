@@ -1,12 +1,33 @@
-import cl_trame  #import du fichier qui creer les classes 
+import mysql.connector 
 from fonction import *     #import du fichier avec toutes les fonctions
+import time
+
+connection_params = {
+    'host': "localhost",
+    'user': "root",
+    'password': "Rionoir2111*",
+    'database': "base",
+    'auth_plugin': 'mysql_native_password'
+}
 
 def main(bine, rep):
-    db = cl_trame.Database(cl_trame.connection_params)
-    db.connect()
-    ouverture(bine)
+    db = mysql.connector.connect(**connection_params)
+    cursor = db.cursor()
+    FT = (ouverture(bine))
     cpter = made_cpter()
-    fichier(rep, cpter, db)
+    with open(rep, "rb") as fic: #ouvre le fichier en binaire
+        lines = fic.readlines() #lit chaque ligne 
+        obsw = lines[7].decode().rstrip().split(": ")[1] + " " + lines[8].decode().rstrip().split(": ")[1] #concataine les 2 valeurs de obsw
+        bds = lines[9].decode().rstrip().split(": ")[1]
+        tv = lines[10].decode().rstrip().split(": ")[1]
+        dt = lines[14].decode().rstrip().replace('"', '').split(": ")[1] #enleve les guillemets pour gérer les pb en csv
+        nom = lines[27].decode().rstrip().split(": ")[1]
+    request = """insert into fichier 
+    (cpter, obsw, bds, tv, dte, nomFic)
+    values (%s,%s,%s,%s,%s,%s)"""
+    params =(cpter, obsw, bds, tv, dt, nom)
+    cursor.execute(request, params)
+    db.commit()
     cpttrame = 1
     coct = 0
     state = True
@@ -16,8 +37,8 @@ def main(bine, rep):
         b5 = useft(coct+20, coct+24, "FT_0", 13, 16) #bytes
         fz = read_convert(coct+24, coct+28)
         if hex(read_convert(coct+40, coct+42))[2:] == "800":
-            md = ft_adr("MAC", read_MAC(coct+28, coct+34))
-            ms = ft_adr("MAC", read_MAC(coct+34, coct+40))
+            md = fct_transfert(read_MAC(coct+28, coct+34), FT.get("MAC_ADR"))
+            ms = fct_transfert(read_MAC(coct+34, coct+40), FT.get("MAC_ADR"))
             f1 = hex(read_convert(coct+40, coct+42))[2:]
             f2 = read_convert(coct+42, coct+44)
             f3 = read_convert(coct+44, coct+46)
@@ -25,8 +46,8 @@ def main(bine, rep):
             f5 = read_convert(coct+48, coct+50)
             f6 = read_convert(coct+50, coct+51)
             f7 = read_convert(coct+51, coct+52)
-            ips = adr_ip(coct+54, coct+58)
-            ipd = adr_ip(coct+58, coct+62)
+            ips = fct_transfert(adr_ip(coct+54, coct+58), FT.get("IP_ADR"))
+            ipd = fct_transfert(adr_ip(coct+58, coct+62), FT.get("IP_ADR"))
             f9 = read_convert(coct+62, coct+64)
             f10 = read_convert(coct+64, coct+66)
             f11 = read_convert(coct+66, coct+68)
@@ -46,13 +67,17 @@ def main(bine, rep):
             ft29 = useft(coct+78, coct+80, "FT_4", 0, 6) #bytes hexa
             f29 = read_bytes(78, 80, 0, 6)
             f30 = read_bytes(coct+78, coct+80, 6, 16)
-            f32 = useft(coct+81, coct+82, "FT_1") #octet deci
+            f32 = useft(coct+81, coct+82, "FT_1") #useft(coct+81, coct+82, "FT_1") octet deci
             f33 = read_convert(coct+82, coct+86)
             f35 = read_convert(coct+86, coct+88)
             pkdt = date_2000(f33+f35/2**16)
-            ft_6 = fct_transfert(FT6(f14, f18, f28, f29, f30), "FT_6")
-            globals()["B{}".format(cpttrame)] = cl_trame.body800(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, f7, ips, ipd, f9, f10, f11, ft14, f16, f17, ft18, f20, f21, f23, f25, f26, ft28, ft29, f30, f32, pkdt, ft_6, cpter, db)
-            globals()["B{}".format(cpttrame)].affiche()
+            ft_6 = fct_transfert(FT6(f14, f18, f28, f29, f30), FT.get("FT_6"))
+            request = """insert into trames 
+            (idFichier,dteT, b3, b5, size, macDest, macSource, f1, f2, f3, f4, f5, f6, f7,  macSender, ipSender, macTarget, ipTarget, ipSource, ipDest, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, pkDte, ft_6)
+            values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            params =(cpter, dt, b3, b5, fz, md, ms, f1, f2, f3, f4, f5, f6, f7, "", "", "", "",ips, ipd, f9, f10, f11, ft14, f16, f17, ft18,  f20, f21, f23, f25, f26, ft28, ft29, f30, f32, pkdt, ft_6)
+            cursor.execute(request, params)
+            db.commit()
             coct = coct + fz + 28
             cpttrame = cpttrame +1
         else:
@@ -68,8 +93,12 @@ def main(bine, rep):
             ipsd = adr_ip(coct+56, coct+60)
             mtg = read_MAC(coct+60, coct+66)
             iptg = adr_ip(coct+66, coct+70)
-            globals()["B{}".format(cpttrame)] = cl_trame.body806(dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, msd, ipsd, mtg, iptg, cpter, db)
-            globals()["B{}".format(cpttrame)].affiche()
+            request = """insert into trames 
+            (idFichier, dteT, b3, b5, size, macDest, macSource, f1, f2, f3, f4, f5, f6, f7, macSender, ipSender, macTarget, ipTarget, ipSource, ipDest, f9, f10, f11, f14, f16, f17, f18, f20, f21, f23, f25, f26, f28, f29, f30, f32, pkDte)
+            values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            params =(cpter, dt, b3, b5, fz, ms, md, f1, f2, f3, f4, f5, f6, "", msd, ipsd, mtg, iptg, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")
+            cursor.execute(request, params)
+            db.commit()
             coct = coct + fz + 28
             cpttrame = cpttrame +1
 
@@ -77,4 +106,6 @@ def main(bine, rep):
             state = False
     db.disconnect()
 
-main("../test/test1/ethernet.result_data", "../test/test1/Vt_DEMO_power_on.rep")
+deb = time.time()
+main("../test/test2/ethernet.result_data", "../test/test2/Vt_DEMO_mem_observability.rep") #Vt_DEMO_mem_observability   Vt_DEMO_power_on
+print(time.time() - deb)

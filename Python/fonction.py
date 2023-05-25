@@ -1,44 +1,16 @@
 import datetime
 import pytz
 import struct
-import cl_trame
 import json
- 
 
 def ouverture(fic): #fonction permetant de d'ouvrir le fichier binaire prend en entré le nom du fichier binaire 
     with open(fic, "rb") as f: #ouvre le fichier 
         global binary   #rend la varible global 
         binary = f.read() #met dans la variable le contenu de mon fichier
-    with open("./FT/FT_7.json", "r") as fic: 
-        global FT_7
-        FT_7 = json.load(fic)
-    with open("./FT/FT_6.json", "r") as fic:
-        global FT_6
-        FT_6 = json.load(fic)
-    with open("./FT/FT_5.json", "r") as fic:
-        global FT_5
-        FT_5 = json.load(fic)
-    with open("./FT/FT_4.json", "r") as fic:
-        global FT_4
-        FT_4 = json.load(fic)
-    with open("./FT/FT_3.json", "r") as fic:
-        global FT_3
-        FT_3 = json.load(fic)
-    with open("./FT/FT_2.json", "r") as fic:
-        global FT_2
-        FT_2 = json.load(fic)
-    with open("./FT/FT_1.json", "r") as fic:
-        global FT_1
-        FT_1 = json.load(fic)
-    with open("./FT/FT_0.json", "r") as fic:
-        global FT_0
-        FT_0 = json.load(fic)
-    with open("./FT/MAC_ADR.json", "r") as fic:
-        global MAC_ADR
-        MAC_ADR = json.load(fic)
-    with open("./FT/IP_ADR.json", "r") as fic:
-        global IP_ADR
-        IP_ADR = json.load(fic)    
+    with open("./FT/FT.json", "r") as fic:
+        global FT
+        FT = json.load(fic)
+    return(FT)
 
 #fonction permetant de chercher la valeur de la variable dans le fichier
 
@@ -122,102 +94,35 @@ def read_bytes(octd, octf, bitd, bitf): #prend en entre l'octet de depart -1 et 
 
 #fonction permettant de lire les données du .rep
 
-def fichier(rep, cpter, db): #prend en entré le nom du fichier
+def fichier(rep, cpter, cursor): #prend en entré le nom du fichier
     with open(rep, "rb") as fic: #ouvre le fichier en binaire
         lines = fic.readlines() #lit chaque ligne 
-        obsw1 = lines[7].decode().rstrip().split(": ")[1] #lit chaque ligne qui nous interesse 
-        obsw2 = lines[8].decode().rstrip().split(": ")[1]
-        obsw = obsw1 + " " +obsw2 #concataine les 2 valeurs de obsw
+        obsw = lines[7].decode().rstrip().split(": ")[1] + " " + lines[8].decode().rstrip().split(": ")[1] #concataine les 2 valeurs de obsw
         bds = lines[9].decode().rstrip().split(": ")[1]
         tv = lines[10].decode().rstrip().split(": ")[1]
         dt = lines[14].decode().rstrip().replace('"', '').split(": ")[1] #enleve les guillemets pour gérer les pb en csv
         nom = lines[27].decode().rstrip().split(": ")[1]
-    test = cl_trame.test(cpter, obsw, bds, tv, dt, nom, db)   #création de la variable pour stocker la class
-    test.affiche() #utilisation de la fonction permettant de l'envoyer 
+    request = """insert into fichier 
+    (cpter, obsw, bds, tv, dte, nomFic)
+    values (%s,%s,%s,%s,%s,%s)"""
+    params =(cpter, obsw, bds, tv, dt, nom)
+    cursor.execute(request, params)
 
 #fonction permettant de verifier si une valeur a un equivalent pour une fonction de transfert
 
-def fct_transfert(val, FT): #prend en entrée la valeure et la fonction de transfert associé a la valeure
-    if FT == "FT_0":    #verifie si la ftc est la bonne 
-        for brut in FT_0:   #prend toutes les valeurs de ftc possible 
-            if val == brut: #compare les a celle voule
-                label = FT_0[brut] #si ca correspond on revoie l'équivalent en fonction de transfert 
-                return(label)
-        return(int(val, base=16)) #sinon on renvoie la valeur initiale 
+def fct_transfert(val, FT_choosen): #prend en entrée la valeure et la fonction de transfert associé a la valeure
+    return FT_choosen.get(val, val)
 
-    if FT == "FT_1": #meme principe 
-        for brut in FT_1:
-            if val == brut:
-                label = FT_1[brut]
-                return(label)
-        return(int(val, base=16))
-
-    if FT == "FT_2":
-        for brut in FT_2:
-            if val == brut:
-                label = FT_2[brut]
-                return(label)
-        return(int(val, base=16))
-
-    if FT == "FT_3":
-        for brut in FT_3:
-            if val == brut:
-                label = FT_3[brut]
-                return(label)
-        return(int(val, base=16))
-
-    if FT == "FT_4":
-        for brut in FT_4:
-            if val == brut:
-                label = FT_4[brut]
-                return(label)
-        return(int(val, base=16))
-
-    if FT == "FT_5":
-        for brut in FT_5:
-            if val == brut:
-                label = FT_5[brut]
-                return(label)
-        return(int(val, base=16))
-    
-    if FT == "FT_6":
-        for brut in FT_6:
-            if val == brut:
-                label = FT_6[brut]
-                return(label)
-        return(False)
-            
-    if FT == "FT_7":
-        for brut in FT_7:
-            if val == brut:
-                label = FT_7[brut]
-                return(label)
-        return(int(val, base=16))
-
-def useft(octd, octf,  FT, bd=0, bf=0):
-    if  FT != "FT_5" and FT != "FT_1":
+def useft(octd, octf,  Fct, bd=0, bf=0):
+    if  Fct != "FT_5" and Fct != "FT_1":
         value = "0x"+str(read_bytes(octd, octf, bd, bf)).zfill(2)
-        return(fct_transfert(value, FT))
-    elif FT == "FT_5":
+        return(fct_transfert(value, FT.get(Fct)))
+    elif Fct == "FT_5":
         value = str(int(read_bytes(octd, octf, bd, bf)))
-        return(fct_transfert(value, FT))
-    else:
+        return(fct_transfert(value, FT.get("FT_5")))
+    elif Fct == "FT_1":
         value = str(read_convert(octd, octf))
-        return(fct_transfert(value, FT))
-
-def ft_adr(tp, adr):
-    if tp == "MAC":
-        for brut in MAC_ADR:
-            if adr == brut:
-                label = MAC_ADR[brut]
-                return(label)
-        return(adr)
-    elif tp == "IP":
-        for brut in IP_ADR:
-            if adr == brut:
-                label = IP_ADR[brut]
-                return(label)
-        return(adr)
+        return(fct_transfert(value, FT.get("FT_1")))
 
 def FT6(f14, f18, f28, f29, f30):
     string = int(str(bin(f14)[2:]) + str(bin(f18)[2:]).zfill(5) + str((bin(f28)[2:])).zfill(6) + str((bin(f29)[2:])).zfill(6) + str((bin(f30)[2:])).zfill(10), base=2)
@@ -236,4 +141,3 @@ def made_cpter():
 if __name__ == '__main__':
     print("Bravo vous avez trouvé les cramptés")
     print("lisez les one piece")
-    print("makima best waifu")
