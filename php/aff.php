@@ -68,7 +68,8 @@ $data = json_decode($json_data, true);
     $sql_total_trames = "SELECT COUNT(*) AS total FROM trames GROUP BY idFichier";
     $result_total_trames = $db->query($sql_total_trames);
     $total_trames = $result_total_trames->fetchColumn();
-    $results_per_page = 100;
+    # combien de trames affiché par page.
+    $results_per_page = $data['maxPage']; 
 
     # calculer le nombre de page néccessaire
     $total_pages = ceil($total_trames / $results_per_page);
@@ -94,7 +95,14 @@ $data = json_decode($json_data, true);
     ?>
     <section id="aff-trames">
         <?php
-        
+        // echo "<form action='filtre.php' id='form-filtre' method='post' >";
+        // echo "<select name='filtre' id='filtre'>";
+        // foreach ($data as $val_data) {
+        //     echo "<option name='filtre' value={$val_data}>{$val_data}</option>";
+        // }
+        // echo "</select>";
+        // echo "<input type='submit' id='btn-filtre' name='filtrer' value='filtrer'>";
+        // echo "</form>";
         foreach ($enr_aff_trames as $val_aff) {
             if ($typeTrame == '800') {
                 $idFichier = $val_aff['idTrame'];
@@ -117,7 +125,7 @@ $data = json_decode($json_data, true);
                 echo "</tr>";
                 
                 echo "<tr>";
-                echo "<td>{$val_aff['dteT']}</td>";
+                echo "<td class='test'>{$val_aff['dteT']}</td>";
                 echo "<td>{$val_aff['b3']}</td>";
                 echo "<td>{$val_aff['b5']}</td>";
                 echo "<td>{$val_aff['size']}</td>";
@@ -168,7 +176,7 @@ $data = json_decode($json_data, true);
                 echo "<th id='f30'>".$data['field30']."</th>";
                 echo "<th id='f32'>".$data['field32']."</th>";
                 echo "<th id='pkDte'>".$data['packetDate']."</th>";
-                echo "<th id='ft_6'>".$data['fonction de transfert 6']."</th>";
+                echo "<th id='ft_6'>".$data['MT']."</th>";
                 echo "</tr>";
                 echo "<tr>";
                 echo "<td>{$val_aff['f20']}</td>";
@@ -191,8 +199,8 @@ $data = json_decode($json_data, true);
                 echo "<table>";
                 echo "<thead>";
                 echo "<tr>";
-                echo "<th id='dte-trame'>DATE</th>";
-                echo "<th id='b3'>bench3</th>";
+                echo "<th id='dte-trame'>".$data['dteT']."</th>";
+                echo "<th id='b3'>".$data['bench3']."</th>";
                 echo "<th id='b5'>bench5</th>";
                 echo "<th id='size'>SIZE</th>";
                 echo "<th id='macDest'>MAC DESTINATION</th>";

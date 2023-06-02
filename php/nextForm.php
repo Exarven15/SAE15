@@ -1,8 +1,8 @@
 <?php
 session_start();
 include('tools/base.php');
-
 $nomFichier = $_POST['nom-fic'];
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -13,6 +13,19 @@ $nomFichier = $_POST['nom-fic'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
     <title>Thalès</title>
+    <script>
+        function afficherMessagePrevention(event) {
+            event.preventDefault(); // Empêche l'envoi du formulaire par défaut
+
+            var confirmation = confirm("Êtes-vous sûr de vouloir supprimer ?");
+            if (confirmation) {
+                event.target.form.submit(); // Soumettre le formulaire après la confirmation
+                
+            } else {
+                // rien car il annule
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -23,7 +36,7 @@ $nomFichier = $_POST['nom-fic'];
         </ul>
     </nav>
     <div id="container">
-        <form action="envoie.php" method="post">
+        <form action="envoie.php" id="fic-date" method="post">
             <div id="cont-test">
                 <!--requête php -->
                 <?php
@@ -46,7 +59,7 @@ $nomFichier = $_POST['nom-fic'];
             <div id="cont-date">
                 <select name="date" id="date">
                     <?php
-                    foreach ($enr_date as $val_date) {  
+                    foreach ($enr_date as $val_date) {
                         $val_date = str_replace(" ", "_", $val_date['dte']);
                         echo "<option value={$val_date}>{$val_date}</option>";
                     }
@@ -57,6 +70,9 @@ $nomFichier = $_POST['nom-fic'];
             <div id="env">
                 <input type="submit" id="sub" value="ENVOYER">
             </div>
+            <div id="suppr">
+                <input type="submit" id="sup" name="suppri" value="SUPPRIMER" onclick="afficherMessagePrevention(event)">
+            </div>
             <?php
 
             ?>
@@ -66,4 +82,3 @@ $nomFichier = $_POST['nom-fic'];
 </body>
 
 </html>
-<script src="Js/script.js"></script>

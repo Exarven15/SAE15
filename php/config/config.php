@@ -165,12 +165,15 @@ $rep = $_GET['ok'];
                     <label for="packetDate"><?php echo $data['packetDate'] ?> :</label>
                     <input type="text" name="packetDate" value="<?php echo $data->packetDate; ?>">
 
-                    <label for="ft_6"><?php echo $data['ft6'] ?> :</label>
-                    <input type="text" name="ft_6" value="<?php echo $data->ft_6; ?>">
+                    <label for="ft_6"><?php echo $data['MT'] ?> :</label>
+                    <input type="text" name="ft_6" value="<?php echo $data->MT; ?>">
+
+                    <label for="maxPage">range page = <?php echo $data['maxPage'] ?> :</label>
+                    <input type="number" name="maxPage" value="<?php echo $data->maxPage; ?>">
                 </div>
             </div>
             <div id="env-conf">
-                <input type="submit" id="sub" value="ENVOYER">
+                <input type="submit" id="sub" value="MODIFIER">
             </div>
 
             <?php

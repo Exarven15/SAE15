@@ -1,6 +1,12 @@
 <?php
 session_start();
 include('php/tools/base.php');
+$sup = $_GET['suppr'];
+if ($sup == "150"){
+    $message = "Enregistrement supprimé avec succès";
+    echo '<script>alert("'.$message.'");</script>';
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -33,27 +39,24 @@ include('php/tools/base.php');
                 $enr_name = $req_name->fetchAll();
                 $req_name->closeCursor();
                 ?>
-
+                
                 <select name="nom-fic" id="test">
                     
                     <?php
                     #onchange="status_update(this.options[this.selectedIndex].value)"
-                    if(!isset($status)){
-                        echo '<option value="">--Veuillez choisir un fichier--</option>';
-                    }
+                    
+                    echo '<option value="">--Veuillez choisir un test--</option>';
+                    
                     foreach ($enr_name as $val_name) {
                         echo "<option name='nom-fic' value={$val_name['nomFic']}>{$val_name['nomFic']}</option>";
                     }
                     ?>
                 </select>
-                <?php 
-                
-                ?>
+            </div>
+            <div id="env">
+                <input type="submit" id="sub" value="SELECTIONNER">
             </div>
             
-            <div id="env">
-                <input type="submit" id="sub" value="ENVOYER">
-            </div>
         </form>
 
     </div>
