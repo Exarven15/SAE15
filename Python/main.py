@@ -5,7 +5,7 @@ import time
 connection_params = {
     'host': "localhost",
     'user': "root",
-    'password': "Rionoir2111*",
+    'password': "root",
     'database': "base",
     'auth_plugin': 'mysql_native_password'
 }
