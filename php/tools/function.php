@@ -1,6 +1,6 @@
 <?php 
 
-$pass = "Rionoir2111*";
+$pass = "root";
 
 function securePassword($pass): string
 {
