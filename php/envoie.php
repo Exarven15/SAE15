@@ -38,7 +38,8 @@ foreach ($enr_fic as $val) {
 
 if ($supp == "SUPPRIMER") {
     
-    // Suppression de l'enregistrement dans la table fichier et de tous les enregistrements correspondants dans la table trames
+    // Suppression de l'enregistrement dans la table fichier et 
+    // de tous les enregistrements correspondants dans la table trames
     $sql_suppression1 = "DELETE FROM trames WHERE idFichier = :idFichier;";
     $req_suppression1 = $db->prepare($sql_suppression1);
     $req_suppression1->bindParam(':idFichier', $id);
