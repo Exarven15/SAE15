@@ -19,7 +19,8 @@ $nomFichier = $_POST['nom-fic'];
 
             var confirmation = confirm("Êtes-vous sûr de vouloir supprimer ?");
             if (confirmation) {
-                event.target.form.submit(); // Soumettre le formulaire après la confirmation
+                // Soumettre le formulaire après la confirmation
+                event.target.form.submit(); 
                 
             } else {
                 // rien car il annule
