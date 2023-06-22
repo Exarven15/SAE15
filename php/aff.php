@@ -11,8 +11,7 @@ $nomFic = $_SESSION['nomFic'];
 $idTrame = $_SESSION['idTrames'];
 $typeTrame = $_SESSION['type-trame'];
 
-
-$json_data = file_get_contents('/home/exarven/Documents/config.json');
+$json_data = file_get_contents('/home/thales/Documents/config.json');
 $data = json_decode($json_data, true);
 
 ?>
@@ -23,7 +22,7 @@ $data = json_decode($json_data, true);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 
     <title>Thalès</title>
 </head>
@@ -115,10 +114,10 @@ $data = json_decode($json_data, true);
                     </tbody>
                 </table>
             </li>
-            <li id="favoris"><a href="/php/config/config.php">Config</a></li>
+            <li id="favoris"><a href="./config/config.php">Config</a></li>
         </ul>
     </nav>
-
+        
     <?php
     $sql_total_trames = "SELECT COUNT(*) AS total FROM trames GROUP BY idFichier";
     $result_total_trames = $db->query($sql_total_trames);
@@ -149,19 +148,76 @@ $data = json_decode($json_data, true);
     $req_aff_trames->closeCursor();
     ?>
     <section id="aff-trames">
+        <select id="paginationSelect">
+    <?php foreach (range(1, $total_pages) as $page) : ?>
+        <?php $first_trame = ($page - 1) * $results_per_page + 1; ?>
+        <?php $url = "aff.php?page=" . $page; ?>
+        <option value="<?php echo $url; ?>" <?php if ($current_page == $page) echo 'selected'; ?>>
+            Trames <?php echo $first_trame; ?>-<?php echo $first_trame + $results_per_page - 1; ?>
+        </option>
+    <?php endforeach; ?>
+</select>
+
+<script>
+    document.getElementById('paginationSelect').addEventListener('change', function() {
+        var selectedValue = this.value;
+        window.location.href = selectedValue;
+    });
+</script>
+        
+<!--
+        <details>
+        <summary id="sum-filtre">Filtre</summary>
+        <div id="container-filtre">
+        <form action="filtre.php" id="form-filt" method="post">
+                <input type="checkbox" name="date">DATE</input>
+                <input type="checkbox" name="b3">B3</input>
+                <input type="checkbox" name="b5">B5</input>
+                <input type="checkbox" name="size">SIZE</input>
+                <input type="checkbox" name="md">Mac Destination</input>
+                <input type="checkbox" name="ms">Mac Source</input>
+                <input type="checkbox" name="f1">field1</input>
+                <input type="checkbox" name="f2">field2</input>
+                <input type="checkbox" name="f3">field3</input>
+                <input type="checkbox" name="f4">field4</input>
+                <input type="checkbox" name="f5">field5</input>
+                <input type="checkbox" name="f6">field6</input>
+                <input type="checkbox" name="f7">field7</input>
+                <input type="checkbox" name="ips">Mac Source</input>
+                <input type="checkbox" name="ipd">Mac Destination</input>
+                <input type="checkbox" name="f9">field9</input>
+                <input type="checkbox" name="f10">field10</input>
+                <input type="checkbox" name="f11">field11</input>
+                <input type="checkbox" name="f14">field14</input>
+                <input type="checkbox" name="f16">field16</input>
+                <input type="checkbox" name="f17">field17</input>
+                <input type="checkbox" name="f18">field18</input>
+                <input type="checkbox" name="f20">field20</input>
+                <input type="checkbox" name="f21">field21</input>
+                <input type="checkbox" name="f23">field23</input>
+                <input type="checkbox" name="f25">field25</input>
+                <input type="checkbox" name="f26">field26</input>
+                <input type="checkbox" name="f28">field28</input>
+                <input type="checkbox" name="f29">field29</input>
+                <input type="checkbox" name="f30">field30</input>
+                <input type="checkbox" name="f32">field32</input>
+                <input type="checkbox" name="pkd">Packet date</input>
+                <input type="checkbox" name="mt">Message Type</input>
+                <input type="checkbox" name="msend">Mac Sender</input>
+                <input type="checkbox" name="mtar">Mac Target</input>
+                <input type="checkbox" name="ipsend">IP Sender</input>
+                <input type="checkbox" name="iptar">IP Target</input>
+        </form>
+        </div>
+        </details>
+-->
+        
+        
         <?php
-        // echo "<form action='filtre.php' id='form-filtre' method='post' >";
-        // echo "<select name='filtre' id='filtre'>";
-        // foreach ($data as $val_data) {
-        //     echo "<option name='filtre' value={$val_data}>{$val_data}</option>";
-        // }
-        // echo "</select>";
-        // echo "<input type='submit' id='btn-filtre' name='filtrer' value='filtrer'>";
-        // echo "</form>";
         foreach ($enr_aff_trames as $val_aff) {
             if ($val_aff['f1'] == '806') {
                 echo "<div>";
-                echo "<summary id='titre-trame'>Trame {$val_aff['idTrame']} du test n°{$idTrame} </summary>";
+                echo "<summary id='titre-trame'>Trame {$val_aff['idTrame']} du test n°{$idTrame}</summary>";
                 echo "<table>";
                 echo "<thead>";
                 echo "<tr>";
@@ -209,7 +265,7 @@ $data = json_decode($json_data, true);
             } elseif ($val_aff['f1'] == '800') {
 
                 echo "<div>";
-                echo "<summary id='titre-trame'>Trame du test n°{$idTrame} </summary>";
+                echo "<summary id='titre-trame'>Trame {$val_aff['idTrame']} du test n°{$idTrame} </summary>";
                 echo "<table>";
                 echo "<thead>";
                 echo "<tr>";
@@ -314,8 +370,8 @@ $data = json_decode($json_data, true);
     </div>
 
     </section>
-
-
+        
+        <a href="#"><div id="up"></div></a><div id="blank"></div>
 </body>
 
 </html>

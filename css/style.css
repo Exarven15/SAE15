@@ -23,7 +23,24 @@ a {
     font-weight: 700;
     font-size: 1.25em;
 }
-
+#up{
+    position:fixed;
+    bottom:15%;
+    right:5%;
+    width:20px;
+    height:20px;
+    background-color:black;
+    transform:rotate(45deg);
+}
+#blank{
+    position:fixed;
+    bottom:14%;
+    right:5%;
+    width:20px;
+    height:20px;
+    background-color:white;
+    transform:rotate(45deg);
+}
 a:hover {
     color: var(--white-color);
 }
@@ -43,6 +60,15 @@ nav {
 
 input::submit {
     cursor: pointer;
+}
+#img{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    }
+img{
+    width:400px;
+    height:200px;
 }
 ul{
     display: grid;
@@ -242,7 +268,9 @@ input::placeholder {
     color: var(--dark-blue-color);
     padding-bottom: 1%;
 }
-
+#paginationSelect{
+margin-top:5%;
+}
 #aff-trames {
     max-width: 100%;
     width: 100%;

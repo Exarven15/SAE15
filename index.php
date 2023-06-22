@@ -6,7 +6,11 @@ if ($sup == "150"){
     $message = "Enregistrement supprimé avec succès";
     echo '<script>alert("'.$message.'");</script>';
 }
-
+$sel = $_GET['sel'];
+if ($sel == "50"){
+    $message = "Veuillez choisir un test.";
+    echo '<script>alert("'.$message.'");</script>';
+    }
 
 ?>
 <!DOCTYPE html>
@@ -16,7 +20,7 @@ if ($sup == "150"){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
     <title>Thalès</title>
 </head>
 
@@ -41,10 +45,7 @@ if ($sup == "150"){
                 ?>
                 
                 <select name="nom-fic" id="test">
-                    
                     <?php
-                    #onchange="status_update(this.options[this.selectedIndex].value)"
-                    
                     echo '<option value="">--Veuillez choisir un test--</option>';
                     
                     foreach ($enr_name as $val_name) {
@@ -59,6 +60,9 @@ if ($sup == "150"){
             
         </form>
 
+    </div>
+    <div id="img">
+    <img src="./logo-thales.png" alt="logo-thales"> 
     </div>
 </body>
 

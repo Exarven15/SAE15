@@ -24,7 +24,7 @@ $rep = $_GET['ok'];
     </nav>
     <div id="container-conf">
         <?php
-        $json_data = file_get_contents('/home/exarven/Documents/config.json');
+        $json_data = file_get_contents('/home/thales/Documents/config.json');
         $data = json_decode($json_data, true);
         ?>
         <form action="modif.php" id="form-conf" method="post">

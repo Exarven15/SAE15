@@ -19,6 +19,12 @@ $req_id_trames->execute();
 $enr_id_trames = $req_id_trames->fetchAll();
 $req_id_trames->closeCursor();
 
+$sql_i = "SELECT idTrame FROM trames;";
+$req_i = $db->prepare($sql_i);
+$req_i -> execute();
+$enr_i = $req_i->fetchAll();
+$req_i->closeCursor();
+
 $sql_type_trame = "SELECT f1 FROM trames WHERE idFichier IN (SELECT id FROM fichier)";
 $req_type_trame = $db->prepare($sql_type_trame);
 $req_type_trame->execute();
@@ -26,7 +32,7 @@ $enr_type_trame = $req_type_trame->fetchAll();
 $req_type_trame->closeCursor();
 
 foreach ($enr_id_trames as $val_idT) $idTrames = $val_idT['idFichier'];
-
+foreach ($enr_i as $val_i ) $i = $val_i['idTrame'];
 foreach ($enr_type_trame as $val_type_trame) $typeTrames = $val_type_trame['f1'];
 
 foreach ($enr_fic as $val) {
@@ -65,6 +71,7 @@ if ($supp == "SUPPRIMER") {
 
     $_SESSION['type-trame'] = $typeTrames;
     $_SESSION['idTrames'] = $idTrames;
+    $_SESSION['i'] = $i ;
 
     header('Location: aff.php');
 }

@@ -2,7 +2,11 @@
 session_start();
 include('tools/base.php');
 $nomFichier = $_POST['nom-fic'];
-
+echo $nomFichier;
+if($nomFichier == ""){
+    header("Location: ../index.php?sel=50");
+    exit();
+    }
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -11,7 +15,7 @@ $nomFichier = $_POST['nom-fic'];
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <title>Thalès</title>
     <script>
         function afficherMessagePrevention(event) {
