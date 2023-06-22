@@ -7,14 +7,14 @@ def ouverture(fic): #fonction permetant de d'ouvrir le fichier binaire prend en 
     with open(fic, "rb") as f: #ouvre le fichier 
         global binary   #rend la varible global 
         binary = f.read() #met dans la variable le contenu de mon fichier
-    with open("./FT/FT.json", "r") as fic:
+    with open("./FT.json", "r") as fic:
         global FT
         FT = json.load(fic)
     return(FT)
 
 #fonction permetant de chercher la valeur de la variable dans le fichier
 
-def read_binary(octd, octf):  #prend en entreé la valeur en octet de but - 1 et la valeur en octet de fin   
+def read_binary(octd, octf):  #prend en entreé la valeur en octet de début - 1 et la valeur en octet de fin   
     return (binary[octd: octf]) #renvoie un chiffre encodé 
 
 #fonction permettant de décoder la valeur renvoyé donné par read_binary
@@ -79,22 +79,22 @@ def adr_ip(octd, octf): #prend en entrée la valeur en octet début - 1 et la va
         octd = octd + 1
         list_ip.append(oct) #met tous dans une liste 
     ip = ".".join(list_ip) #join bout a bout tous les élements de la liste par un point 
-    return(ip) #renvoi l'adr ip
+    return(ip) #renvoie  l'adresse ip
 
 #fonction permettant de lire les octets bits par bits 
 
-def read_bytes(octd, octf, bitd, bitf): #prend en entre l'octet de depart -1 et l'octet de fin et le bits de depart -1 et le bits de fin
+def read_bytes(octd, octf, bitd, bitf): #prend en entrée l'octet de depart -1 et l'octet de fin et le bits de depart -1 et le bits de fin
     n = octf - octd #calcule ne nombre d'octet demandé
     nb = read_convert(octd, octf) #cherche la valeur en decimal des octets 
     nb_bin = str(bin(nb))[2:] #converti l'octet en binaire et le met enleve le 0b devant
-    nb_bin = nb_bin.zfill(n*8) #remplis le nombre de bits necessaire par des 0 devants car enlevés au moment des converisons
-    bit = nb_bin[bitd : bitf] # prends dans la chaine de charactère les octets demandés 
+    nb_bin = nb_bin.zfill(n*8) #remplis le nombre de bits necessaire par des 0 devants car enlevés au moment des conversions
+    bit = nb_bin[bitd : bitf] # prends dans la chaine de caractère les octets demandés 
     nb = int(bit, 2) #converti le tout en decimal 
     return(nb) #renvoi la valeur en decimal
 
 #fonction permettant de lire les données du .rep
 
-def fichier(rep, cpter, cursor): #prend en entré le nom du fichier
+def fichier(rep, cpter, cursor): #prend en entrée le nom du fichier
     with open(rep, "rb") as fic: #ouvre le fichier en binaire
         lines = fic.readlines() #lit chaque ligne 
         obsw = lines[7].decode().rstrip().split(": ")[1] + " " + lines[8].decode().rstrip().split(": ")[1] #concataine les 2 valeurs de obsw
@@ -110,7 +110,7 @@ def fichier(rep, cpter, cursor): #prend en entré le nom du fichier
 
 #fonction permettant de verifier si une valeur a un equivalent pour une fonction de transfert
 
-def fct_transfert(val, FT_choosen): #prend en entrée la valeure et la fonction de transfert associé a la valeure
+def fct_transfert(val, FT_choosen): #prend en entrée la valeu et la fonction de transfert associé a la valeure
     return FT_choosen.get(val, val)
 
 def useft(octd, octf,  Fct, bd=0, bf=0):
@@ -131,13 +131,10 @@ def FT6(f14, f18, f28, f29, f30):
     return string
 
 def made_cpter():
-    with open("./compteur.json", "r") as fic1:
+    with open("compteur.json", "r") as fic1:
         cpter = json.load(fic1)
     cpter = cpter + 1
-    with open("./compteur.json", "w") as fic2:
+    with open("compteur.json", "w") as fic2:
         json.dump(cpter, fic2)
     return cpter
 
-if __name__ == '__main__':
-    print("Bravo vous avez trouvé les cramptés")
-    print("lisez les one piece")

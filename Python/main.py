@@ -1,6 +1,8 @@
 import mysql.connector 
 from fonction import *     #import du fichier avec toutes les fonctions
 import time
+import click
+
 
 connection_params = {
     'host': "localhost",
@@ -10,20 +12,40 @@ connection_params = {
     'auth_plugin': 'mysql_native_password'
 }
 
-def main(bine, rep):
+@click.command()
+@click.argument("bine", type=str, nargs=1)
+@click.option("--rep", type=str, nargs=1, help="Obligatoire si --dt non spécifié sinon rend --dt inutile; Sert à spécifier le chemin d'accès du fichier de configuration")
+@click.option("--dt", type=click.DateTime(formats=["%d-%m-%Y-%H:%M:%S"]), nargs=1, help="Obligatoire si --rep non spécifié sinon inutile; Sert à spécifier la date ")
+@click.option("--obsw",type=str, nargs=1, help="Inutile si --rep spécifié sinon facultatif; Sert à spécifier l'obsw")
+@click.option("--bds",type=str, nargs=1, help="Inutile si --rep spécifié sinon facultatif; Sert à spécifier le bds")
+@click.option("--tv",type=str, nargs=1, help="Inutile si --rep spécifié sinon facultatif; Sert à spécifier le tv")
+@click.option("--nom",type=str, nargs=1, help="Inutile si --rep spécifié sinon facultatif; Sert à spécifier le nom du test")
+
+
+def main(bine, rep, obsw="", bds="", tv="", dt="", nom=""):
+    """
+    Bonjour et merci d'utiliser notre programme :) \n
+    Syntaxe: 'python main.py [FICHIER BIN] --rep --options \n
+    [Fichier BIN] est le chemin d'accès du fichier binaire qu'on souhaite importer
+    Pour plus d'infos sur les options voir ci dessous
+    """
+    if rep == None and dt== None:
+        print("Syntaxe: 'python main.py [FICHIER BIN] --rep --options' \n Si --rep n'est pas donné, --dt est obligatoire \n Pour obtenir de l'aide voir, 'python main.py --help'")
+        exit()
     db = mysql.connector.connect(**connection_params)
     cursor = db.cursor()
     FT = (ouverture(bine))
     cpter = made_cpter()
-    with open(rep, "rb") as fic: #ouvre le fichier en binaire
-        lines = fic.readlines() #lit chaque ligne 
-        obsw = lines[7].decode().rstrip().split(": ")[1] + " " + lines[8].decode().rstrip().split(": ")[1] #concataine les 2 valeurs de obsw
-        bds = lines[9].decode().rstrip().split(": ")[1]
-        tv = lines[10].decode().rstrip().split(": ")[1]
-        dt = lines[14].decode().rstrip().replace('"', '').split(": ")[1] #enleve les guillemets pour gérer les pb en csv
-        nom = lines[27].decode().rstrip().split(": ")[1]
+    if rep:
+        with open(rep, "rb") as fic: #ouvre le fichier en binaire
+            lines = fic.readlines() #lit chaque ligne 
+            obsw = lines[7].decode().rstrip().split(": ")[1] + " " + lines[8].decode().rstrip().split(": ")[1] #concataine les 2 valeurs de obsw
+            bds = lines[9].decode().rstrip().split(": ")[1]
+            tv = lines[10].decode().rstrip().split(": ")[1]
+            dt = lines[14].decode().rstrip().replace('"', '').split(": ")[1] #enleve les guillemets pour gérer les pb en csv
+            nom = lines[27].decode().rstrip().split(": ")[1]
     request = """insert into fichier 
-    (cpter, obsw, bds, tv, dte, nomFic)
+    (id, obsw, bds, tv, dte, nomFic)
     values (%s,%s,%s,%s,%s,%s)"""
     params =(cpter, obsw, bds, tv, dt, nom)
     cursor.execute(request, params)
@@ -105,7 +127,6 @@ def main(bine, rep):
         if not read_convert(coct, coct+8):
             state = False
     db.disconnect()
-
-deb = time.time()
-main("../test/test2/ethernet.result_data", "../test/test2/Vt_DEMO_mem_observability.rep") #Vt_DEMO_mem_observability   Vt_DEMO_power_on
-print(time.time() - deb)
+    print(f"Fichier {bine} importé avec succès")
+if __name__ == "__main__":
+    main()
